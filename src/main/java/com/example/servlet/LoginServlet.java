@@ -10,25 +10,28 @@ import com.example.Users;
 @WebServlet("/login")
 public class LoginServlet extends HttpServlet {
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        HttpSession session = req.getSession(false);
-        if(session !=null && session.getAttribute("user") != null){
-            resp.sendRedirect(req.getContextPath() + "/login.jsp");
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        HttpSession session = request.getSession(false);
+
+        if (session != null && session.getAttribute("user") != null) {
+            response.sendRedirect(request.getContextPath() + "/user/hello.jsp");
         } else {
-            resp.sendRedirect(req.getContextPath() + "/hello.jsp");
+            response.sendRedirect(request.getContextPath() + "/login.jsp");
         }
     }
+
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String login = req.getParameter("login");
-        String password = req.getParameter("password");
-        Users instance = Users.getInstance();
-        if(instance.getUsers().contains(login)  && password != null && !password.isEmpty()){
-            HttpSession session = req.getSession();
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String login = request.getParameter("login");
+        String password = request.getParameter("password");
+
+        if (login != null && Users.getInstance().getUsers().contains(login) && password != null && !password.isEmpty()) {
+            HttpSession session = request.getSession();
             session.setAttribute("user", login);
-            resp.sendRedirect(req.getContextPath() + "/hello.jsp");
+            response.sendRedirect(request.getContextPath() + "/user/hello.jsp");
         } else {
-            req.getRequestDispatcher("/login.jsp").forward(req,resp);
+            request.getRequestDispatcher("/login.jsp").forward(request, response);
         }
     }
+
 }
